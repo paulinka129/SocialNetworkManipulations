@@ -1,1280 +1,1600 @@
 Creator "Paulina Brzechffa"
 graph [
+  multigraph 1
   node [
     id 216
-    label C
+    label 216
+    value "C"
   ]
   node [
     id 217
-    label B
+    label 217
+    value "B"
   ]
   node [
     id 214
-    label E
+    label 214
+    value "E"
   ]
   node [
     id 215
-    label C
+    label 215
+    value "C"
   ]
   node [
     id 212
-    label J
+    label 212
+    value "J"
   ]
   node [
     id 213
-    label I
+    label 213
+    value "I"
   ]
   node [
     id 210
-    label E
+    label 210
+    value "E"
   ]
   node [
     id 211
-    label F
+    label 211
+    value "F"
   ]
   node [
     id 165
-    label F
+    label 165
+    value "F"
   ]
   node [
     id 264
-    label C
+    label 264
+    value "C"
   ]
   node [
     id 265
-    label A
+    label 265
+    value "A"
   ]
   node [
     id 218
-    label C
+    label 218
+    value "C"
   ]
   node [
     id 219
-    label E
+    label 219
+    value "E"
   ]
   node [
     id 133
-    label H
+    label 133
+    value "H"
   ]
   node [
     id 132
-    label E
+    label 132
+    value "E"
   ]
   node [
     id 131
-    label I
+    label 131
+    value "I"
   ]
   node [
     id 130
-    label B
+    label 130
+    value "B"
   ]
   node [
     id 137
-    label F
+    label 137
+    value "F"
   ]
   node [
     id 136
-    label M
+    label 136
+    value "M"
   ]
   node [
     id 135
-    label N
+    label 135
+    value "N"
   ]
   node [
     id 134
-    label M
+    label 134
+    value "M"
   ]
   node [
     id 139
-    label L
+    label 139
+    value "L"
   ]
   node [
     id 138
-    label D
+    label 138
+    value "D"
   ]
   node [
     id 166
-    label M
+    label 166
+    value "M"
   ]
   node [
     id 24
-    label E
+    label 24
+    value "E"
   ]
   node [
     id 25
-    label G
+    label 25
+    value "G"
   ]
   node [
     id 26
-    label A
+    label 26
+    value "A"
   ]
   node [
     id 27
-    label M
+    label 27
+    value "M"
   ]
   node [
     id 20
-    label N
+    label 20
+    value "N"
   ]
   node [
     id 21
-    label E
+    label 21
+    value "E"
   ]
   node [
     id 22
-    label K
+    label 22
+    value "K"
   ]
   node [
     id 23
-    label B
+    label 23
+    value "B"
   ]
   node [
     id 160
-    label B
+    label 160
+    value "B"
   ]
   node [
     id 28
-    label F
+    label 28
+    value "F"
   ]
   node [
     id 29
-    label O
+    label 29
+    value "O"
   ]
   node [
     id 161
-    label F
+    label 161
+    value "F"
   ]
   node [
     id 289
-    label K
+    label 289
+    value "K"
   ]
   node [
     id 288
-    label J
+    label 288
+    value "J"
   ]
   node [
     id 4
-    label D
+    label 4
+    value "D"
   ]
   node [
     id 281
-    label E
+    label 281
+    value "E"
   ]
   node [
     id 8
-    label F
+    label 8
+    value "F"
   ]
   node [
     id 283
-    label L
+    label 283
+    value "L"
   ]
   node [
     id 163
-    label H
+    label 163
+    value "H"
   ]
   node [
     id 285
-    label E
+    label 285
+    value "E"
   ]
   node [
     id 284
-    label G
+    label 284
+    value "G"
   ]
   node [
     id 287
-    label B
+    label 287
+    value "B"
   ]
   node [
     id 286
-    label J
+    label 286
+    value "J"
   ]
   node [
     id 119
-    label F
+    label 119
+    value "F"
   ]
   node [
     id 271
-    label A
+    label 271
+    value "A"
   ]
   node [
     id 120
-    label N
+    label 120
+    value "N"
   ]
   node [
     id 121
-    label A
+    label 121
+    value "A"
   ]
   node [
     id 122
-    label O
+    label 122
+    value "O"
   ]
   node [
     id 123
-    label C
+    label 123
+    value "C"
   ]
   node [
     id 267
-    label G
+    label 267
+    value "G"
   ]
   node [
     id 125
-    label J
+    label 125
+    value "J"
   ]
   node [
     id 126
-    label H
+    label 126
+    value "H"
   ]
   node [
     id 127
-    label A
+    label 127
+    value "A"
   ]
   node [
     id 128
-    label K
+    label 128
+    value "K"
   ]
   node [
     id 129
-    label A
+    label 129
+    value "A"
   ]
   node [
     id 269
-    label A
+    label 269
+    value "A"
   ]
   node [
     id 268
-    label A
+    label 268
+    value "A"
   ]
   node [
     id 167
-    label B
+    label 167
+    value "B"
   ]
   node [
     id 118
-    label F
+    label 118
+    value "F"
   ]
   node [
     id 59
-    label F
+    label 59
+    value "F"
   ]
   node [
     id 58
-    label E
+    label 58
+    value "E"
   ]
   node [
     id 55
-    label I
+    label 55
+    value "I"
   ]
   node [
     id 54
-    label H
+    label 54
+    value "H"
   ]
   node [
     id 57
-    label C
+    label 57
+    value "C"
   ]
   node [
     id 56
-    label A
+    label 56
+    value "A"
   ]
   node [
     id 51
-    label D
+    label 51
+    value "D"
   ]
   node [
     id 50
-    label O
+    label 50
+    value "O"
   ]
   node [
     id 53
-    label J
+    label 53
+    value "J"
   ]
   node [
     id 52
-    label B
+    label 52
+    value "B"
   ]
   node [
     id 259
-    label M
+    label 259
+    value "M"
   ]
   node [
     id 312
-    label M
+    label 312
+    value "M"
   ]
   node [
     id 298
-    label D
+    label 298
+    value "D"
   ]
   node [
     id 299
-    label D
+    label 299
+    value "D"
   ]
   node [
     id 296
-    label C
+    label 296
+    value "C"
   ]
   node [
     id 297
-    label L
+    label 297
+    value "L"
   ]
   node [
     id 294
-    label E
+    label 294
+    value "E"
   ]
   node [
     id 295
-    label B
+    label 295
+    value "B"
   ]
   node [
     id 292
-    label M
+    label 292
+    value "M"
   ]
   node [
     id 293
-    label B
+    label 293
+    value "B"
   ]
   node [
     id 290
-    label F
+    label 290
+    value "F"
   ]
   node [
     id 291
-    label B
+    label 291
+    value "B"
   ]
   node [
     id 164
-    label M
+    label 164
+    value "M"
   ]
   node [
     id 201
-    label C
+    label 201
+    value "C"
   ]
   node [
     id 319
-    label E
+    label 319
+    value "E"
   ]
   node [
     id 318
-    label G
+    label 318
+    value "G"
   ]
   node [
     id 199
-    label J
+    label 199
+    value "J"
   ]
   node [
     id 179
-    label C
+    label 179
+    value "C"
   ]
   node [
     id 200
-    label E
+    label 200
+    value "E"
   ]
   node [
     id 195
-    label M
+    label 195
+    value "M"
   ]
   node [
     id 194
-    label H
+    label 194
+    value "H"
   ]
   node [
     id 197
-    label D
+    label 197
+    value "D"
   ]
   node [
     id 178
-    label A
+    label 178
+    value "A"
   ]
   node [
     id 191
-    label D
+    label 191
+    value "D"
   ]
   node [
     id 190
-    label K
+    label 190
+    value "K"
   ]
   node [
     id 315
-    label P
+    label 315
+    value "P"
   ]
   node [
     id 192
-    label E
+    label 192
+    value "E"
   ]
   node [
     id 115
-    label F
+    label 115
+    value "F"
   ]
   node [
     id 114
-    label O
+    label 114
+    value "O"
   ]
   node [
     id 88
-    label M
+    label 88
+    value "M"
   ]
   node [
     id 89
-    label C
+    label 89
+    value "C"
   ]
   node [
     id 111
-    label E
+    label 111
+    value "E"
   ]
   node [
     id 110
-    label G
+    label 110
+    value "G"
   ]
   node [
     id 276
-    label I
+    label 276
+    value "I"
   ]
   node [
     id 112
-    label N
+    label 112
+    value "N"
   ]
   node [
     id 82
-    label F
+    label 82
+    value "F"
   ]
   node [
     id 83
-    label B
+    label 83
+    value "B"
   ]
   node [
     id 80
-    label C
+    label 80
+    value "C"
   ]
   node [
     id 81
-    label C
+    label 81
+    value "C"
   ]
   node [
     id 86
-    label O
+    label 86
+    value "O"
   ]
   node [
     id 87
-    label J
+    label 87
+    value "J"
   ]
   node [
     id 84
-    label F
+    label 84
+    value "F"
   ]
   node [
     id 85
-    label A
+    label 85
+    value "A"
   ]
   node [
     id 251
-    label F
+    label 251
+    value "F"
   ]
   node [
     id 304
-    label M
+    label 304
+    value "M"
   ]
   node [
     id 198
-    label K
+    label 198
+    value "K"
   ]
   node [
     id 256
-    label A
+    label 256
+    value "A"
   ]
   node [
     id 206
-    label C
+    label 206
+    value "C"
   ]
   node [
     id 257
-    label O
+    label 257
+    value "O"
   ]
   node [
     id 3
-    label I
+    label 3
+    value "I"
   ]
   node [
     id 177
-    label H
+    label 177
+    value "H"
   ]
   node [
     id 254
-    label E
+    label 254
+    value "E"
   ]
   node [
     id 7
-    label C
+    label 7
+    value "C"
   ]
   node [
     id 247
-    label C
+    label 247
+    value "C"
   ]
   node [
     id 273
-    label F
+    label 273
+    value "F"
   ]
   node [
     id 255
-    label L
+    label 255
+    value "L"
   ]
   node [
     id 308
-    label A
+    label 308
+    value "A"
   ]
   node [
     id 309
-    label K
+    label 309
+    value "K"
   ]
   node [
     id 300
-    label D
+    label 300
+    value "D"
   ]
   node [
     id 301
-    label D
+    label 301
+    value "D"
   ]
   node [
     id 302
-    label B
+    label 302
+    value "B"
   ]
   node [
     id 303
-    label M
+    label 303
+    value "M"
   ]
   node [
     id 225
-    label E
+    label 225
+    value "E"
   ]
   node [
     id 305
-    label L
+    label 305
+    value "L"
   ]
   node [
     id 306
-    label F
+    label 306
+    value "F"
   ]
   node [
     id 307
-    label K
+    label 307
+    value "K"
   ]
   node [
     id 245
-    label D
+    label 245
+    value "D"
   ]
   node [
     id 244
-    label B
+    label 244
+    value "B"
   ]
   node [
     id 108
-    label E
+    label 108
+    value "E"
   ]
   node [
     id 109
-    label E
+    label 109
+    value "E"
   ]
   node [
     id 241
-    label E
+    label 241
+    value "E"
   ]
   node [
     id 240
-    label P
+    label 240
+    value "P"
   ]
   node [
     id 243
-    label L
+    label 243
+    value "L"
   ]
   node [
     id 242
-    label B
+    label 242
+    value "B"
   ]
   node [
     id 102
-    label L
+    label 102
+    value "L"
   ]
   node [
     id 103
-    label J
+    label 103
+    value "J"
   ]
   node [
     id 100
-    label M
+    label 100
+    value "M"
   ]
   node [
     id 101
-    label E
+    label 101
+    value "E"
   ]
   node [
     id 106
-    label K
+    label 106
+    value "K"
   ]
   node [
     id 107
-    label M
+    label 107
+    value "M"
   ]
   node [
     id 104
-    label O
+    label 104
+    value "O"
   ]
   node [
     id 105
-    label F
+    label 105
+    value "F"
   ]
   node [
     id 39
-    label K
+    label 39
+    value "K"
   ]
   node [
     id 38
-    label D
+    label 38
+    value "D"
   ]
   node [
     id 33
-    label F
+    label 33
+    value "F"
   ]
   node [
     id 32
-    label M
+    label 32
+    value "M"
   ]
   node [
     id 31
-    label L
+    label 31
+    value "L"
   ]
   node [
     id 30
-    label E
+    label 30
+    value "E"
   ]
   node [
     id 37
-    label G
+    label 37
+    value "G"
   ]
   node [
     id 36
-    label M
+    label 36
+    value "M"
   ]
   node [
     id 35
-    label N
+    label 35
+    value "N"
   ]
   node [
     id 34
-    label J
+    label 34
+    value "J"
   ]
   node [
     id 246
-    label F
+    label 246
+    value "F"
   ]
   node [
     id 310
-    label E
+    label 310
+    value "E"
   ]
   node [
     id 282
-    label E
+    label 282
+    value "E"
   ]
   node [
     id 252
-    label C
+    label 252
+    value "C"
   ]
   node [
     id 205
-    label B
+    label 205
+    value "B"
   ]
   node [
     id 223
-    label M
+    label 223
+    value "M"
   ]
   node [
     id 176
-    label P
+    label 176
+    value "P"
   ]
   node [
     id 330
-    label C
+    label 330
+    value "C"
   ]
   node [
     id 332
-    label L
+    label 332
+    value "L"
   ]
   node [
     id 60
-    label A
+    label 60
+    value "A"
   ]
   node [
     id 61
-    label A
+    label 61
+    value "A"
   ]
   node [
     id 62
-    label A
+    label 62
+    value "A"
   ]
   node [
     id 63
-    label E
+    label 63
+    value "E"
   ]
   node [
     id 64
-    label F
+    label 64
+    value "F"
   ]
   node [
     id 65
-    label A
+    label 65
+    value "A"
   ]
   node [
     id 66
-    label M
+    label 66
+    value "M"
   ]
   node [
     id 67
-    label D
+    label 67
+    value "D"
   ]
   node [
     id 68
-    label F
+    label 68
+    value "F"
   ]
   node [
     id 69
-    label C
+    label 69
+    value "C"
   ]
   node [
     id 175
-    label E
+    label 175
+    value "E"
   ]
   node [
     id 174
-    label J
+    label 174
+    value "J"
   ]
   node [
     id 173
-    label B
+    label 173
+    value "B"
   ]
   node [
     id 172
-    label D
+    label 172
+    value "D"
   ]
   node [
     id 171
-    label E
+    label 171
+    value "E"
   ]
   node [
     id 170
-    label E
+    label 170
+    value "E"
   ]
   node [
     id 203
-    label M
+    label 203
+    value "M"
   ]
   node [
     id 222
-    label D
+    label 222
+    value "D"
   ]
   node [
     id 181
-    label J
+    label 181
+    value "J"
   ]
   node [
     id 253
-    label P
+    label 253
+    value "P"
   ]
   node [
     id 248
-    label L
+    label 248
+    value "L"
   ]
   node [
     id 182
-    label F
+    label 182
+    value "F"
   ]
   node [
     id 183
-    label A
+    label 183
+    value "A"
   ]
   node [
     id 180
-    label H
+    label 180
+    value "H"
   ]
   node [
     id 2
-    label E
+    label 2
+    value "E"
   ]
   node [
     id 162
-    label A
+    label 162
+    value "A"
   ]
   node [
     id 187
-    label L
+    label 187
+    value "L"
   ]
   node [
     id 184
-    label D
+    label 184
+    value "D"
   ]
   node [
     id 6
-    label E
+    label 6
+    value "E"
   ]
   node [
     id 220
-    label O
+    label 220
+    value "O"
   ]
   node [
     id 186
-    label C
+    label 186
+    value "C"
   ]
   node [
     id 188
-    label A
+    label 188
+    value "A"
   ]
   node [
     id 189
-    label A
+    label 189
+    value "A"
   ]
   node [
     id 202
-    label C
+    label 202
+    value "C"
   ]
   node [
     id 313
-    label M
+    label 313
+    value "M"
   ]
   node [
     id 196
-    label O
+    label 196
+    value "O"
   ]
   node [
     id 221
-    label E
+    label 221
+    value "E"
   ]
   node [
     id 317
-    label B
+    label 317
+    value "B"
   ]
   node [
     id 185
-    label F
+    label 185
+    value "F"
   ]
   node [
     id 316
-    label K
+    label 316
+    value "K"
   ]
   node [
     id 99
-    label E
+    label 99
+    value "E"
   ]
   node [
     id 98
-    label F
+    label 98
+    value "F"
   ]
   node [
     id 168
-    label C
+    label 168
+    value "C"
   ]
   node [
     id 169
-    label K
+    label 169
+    value "K"
   ]
   node [
     id 229
-    label K
+    label 229
+    value "K"
   ]
   node [
     id 228
-    label E
+    label 228
+    value "E"
   ]
   node [
     id 91
-    label D
+    label 91
+    value "D"
   ]
   node [
     id 90
-    label E
+    label 90
+    value "E"
   ]
   node [
     id 93
-    label G
+    label 93
+    value "G"
   ]
   node [
     id 92
-    label I
+    label 92
+    value "I"
   ]
   node [
     id 95
-    label J
+    label 95
+    value "J"
   ]
   node [
     id 94
-    label O
+    label 94
+    value "O"
   ]
   node [
     id 97
-    label M
+    label 97
+    value "M"
   ]
   node [
     id 96
-    label A
+    label 96
+    value "A"
   ]
   node [
     id 11
-    label C
+    label 11
+    value "C"
   ]
   node [
     id 10
-    label J
+    label 10
+    value "J"
   ]
   node [
     id 13
-    label M
+    label 13
+    value "M"
   ]
   node [
     id 12
-    label K
+    label 12
+    value "K"
   ]
   node [
     id 14
-    label C
+    label 14
+    value "C"
   ]
   node [
     id 17
-    label K
+    label 17
+    value "K"
   ]
   node [
     id 16
-    label F
+    label 16
+    value "F"
   ]
   node [
     id 19
-    label F
+    label 19
+    value "F"
   ]
   node [
     id 18
-    label A
+    label 18
+    value "A"
   ]
   node [
     id 314
-    label B
+    label 314
+    value "B"
   ]
   node [
     id 117
-    label C
+    label 117
+    value "C"
   ]
   node [
     id 250
-    label C
+    label 250
+    value "C"
   ]
   node [
     id 116
-    label A
+    label 116
+    value "A"
   ]
   node [
     id 274
-    label I
+    label 274
+    value "I"
   ]
   node [
     id 275
-    label A
+    label 275
+    value "A"
   ]
   node [
     id 151
-    label F
+    label 151
+    value "F"
   ]
   node [
     id 150
-    label N
+    label 150
+    value "N"
   ]
   node [
     id 153
-    label D
+    label 153
+    value "D"
   ]
   node [
     id 152
-    label I
+    label 152
+    value "I"
   ]
   node [
     id 155
-    label E
+    label 155
+    value "E"
   ]
   node [
     id 154
-    label L
+    label 154
+    value "L"
   ]
   node [
     id 157
-    label C
+    label 157
+    value "C"
   ]
   node [
     id 156
-    label O
+    label 156
+    value "O"
   ]
   node [
     id 158
-    label C
+    label 158
+    value "C"
   ]
   node [
     id 277
-    label E
+    label 277
+    value "E"
   ]
   node [
     id 234
-    label F
+    label 234
+    value "F"
   ]
   node [
     id 322
-    label C
+    label 322
+    value "C"
   ]
   node [
     id 238
-    label K
+    label 238
+    value "K"
   ]
   node [
     id 239
-    label A
+    label 239
+    value "A"
   ]
   node [
     id 207
-    label M
+    label 207
+    value "M"
   ]
   node [
     id 235
-    label D
+    label 235
+    value "D"
   ]
   node [
     id 236
-    label C
+    label 236
+    value "C"
   ]
   node [
     id 237
-    label I
+    label 237
+    value "I"
   ]
   node [
     id 230
-    label A
+    label 230
+    value "A"
   ]
   node [
     id 231
-    label I
+    label 231
+    value "I"
   ]
   node [
     id 232
-    label B
+    label 232
+    value "B"
   ]
   node [
     id 233
-    label C
+    label 233
+    value "C"
   ]
   node [
     id 224
-    label E
+    label 224
+    value "E"
   ]
   node [
     id 280
-    label J
+    label 280
+    value "J"
   ]
   node [
     id 48
-    label A
+    label 48
+    value "A"
   ]
   node [
     id 49
-    label P
+    label 49
+    value "P"
   ]
   node [
     id 46
-    label K
+    label 46
+    value "K"
   ]
   node [
     id 47
-    label K
+    label 47
+    value "K"
   ]
   node [
     id 44
-    label G
+    label 44
+    value "G"
   ]
   node [
     id 45
-    label A
+    label 45
+    value "A"
   ]
   node [
     id 42
-    label E
+    label 42
+    value "E"
   ]
   node [
     id 43
-    label E
+    label 43
+    value "E"
   ]
   node [
     id 40
-    label C
+    label 40
+    value "C"
   ]
   node [
     id 41
-    label B
+    label 41
+    value "B"
   ]
   node [
     id 1
-    label C
+    label 1
+    value "C"
   ]
   node [
     id 323
-    label B
+    label 323
+    value "B"
   ]
   node [
     id 320
-    label J
+    label 320
+    value "J"
   ]
   node [
     id 321
-    label K
+    label 321
+    value "K"
   ]
   node [
     id 5
-    label B
+    label 5
+    value "B"
   ]
   node [
     id 327
-    label J
+    label 327
+    value "J"
   ]
   node [
     id 324
-    label O
+    label 324
+    value "O"
   ]
   node [
     id 325
-    label D
+    label 325
+    value "D"
   ]
   node [
     id 9
-    label M
+    label 9
+    value "M"
   ]
   node [
     id 328
-    label E
+    label 328
+    value "E"
   ]
   node [
     id 329
-    label D
+    label 329
+    value "D"
   ]
   node [
     id 272
-    label A
+    label 272
+    value "A"
   ]
   node [
     id 146
-    label I
+    label 146
+    value "I"
   ]
   node [
     id 147
-    label M
+    label 147
+    value "M"
   ]
   node [
     id 144
-    label A
+    label 144
+    value "A"
   ]
   node [
     id 145
-    label C
+    label 145
+    value "C"
   ]
   node [
     id 142
-    label L
+    label 142
+    value "L"
   ]
   node [
     id 204
-    label B
+    label 204
+    value "B"
   ]
   node [
     id 140
-    label I
+    label 140
+    value "I"
   ]
   node [
     id 141
-    label K
+    label 141
+    value "K"
   ]
   node [
     id 209
-    label B
+    label 209
+    value "B"
   ]
   node [
     id 208
-    label N
+    label 208
+    value "N"
   ]
   node [
     id 148
-    label A
+    label 148
+    value "A"
   ]
   node [
     id 149
-    label A
+    label 149
+    value "A"
   ]
   node [
     id 77
-    label N
+    label 77
+    value "N"
   ]
   node [
     id 76
-    label B
+    label 76
+    value "B"
   ]
   node [
     id 75
-    label B
+    label 75
+    value "B"
   ]
   node [
     id 74
-    label M
+    label 74
+    value "M"
   ]
   node [
     id 72
-    label A
+    label 72
+    value "A"
   ]
   node [
     id 71
-    label B
+    label 71
+    value "B"
   ]
   node [
     id 70
-    label I
+    label 70
+    value "I"
   ]
   node [
     id 278
-    label B
+    label 278
+    value "B"
   ]
   node [
     id 79
-    label C
+    label 79
+    value "C"
   ]
   node [
     id 78
-    label N
+    label 78
+    value "N"
   ]
   node [
     id 263
-    label J
+    label 263
+    value "J"
   ]
   node [
     id 249
-    label B
+    label 249
+    value "B"
   ]
   node [
     id 262
-    label B
+    label 262
+    value "B"
   ]
   node [
     id 227
-    label N
+    label 227
+    value "N"
   ]
   node [
     id 261
-    label F
+    label 261
+    value "F"
   ]
   node [
     id 270
-    label C
+    label 270
+    value "C"
   ]
   node [
     id 260
-    label O
+    label 260
+    value "O"
   ]
   node [
     id 266
-    label I
+    label 266
+    value "I"
   ]
   edge [
     source 47
