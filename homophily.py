@@ -68,36 +68,50 @@ class Homophily:
         utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'add_by_ranking')
         utils.plot_global_homophily(self.global_homophilies, network_name, 'add_by_ranking')
 
-    def remove_random(self, count, clas, network_name):
+    def remove_random(self, count, manipulation_clas, clas, network_name):
         self.global_homophilies  = []
+        class_partitions = []
+        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+        class_partitions.append(len(nodes_with_manipulation_clas)/self.size)
         homo_list_before = self.local_homophily()
         nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
         utils.save_to_file(homo_list_before, network_name, 'remove_random_homo_list_before')
-        for _ in range(count-1):
+        count = len(nodes_with_clas)
+        for i in range(count):
             random_node = choice(nodes_with_clas)
             try:
                 self.G.remove_node(random_node)
+                nodes_with_clas.remove(random_node)
+                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 self.global_homophily()
+                print i
             except nx.NetworkXError:
                 print 'node does not exist in graph'
-            
+
         homo_list_after = self.local_homophily()
         utils.save_to_file(homo_list_after, network_name, 'remove_random_homo_list_after')
         utils.save_to_file(self.global_homophilies, network_name, 'remove_random_global_homophilies')
         utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_random')
         utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_random')
+        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_random')
 
 
-    def remove_with_probability(self, count, clas, network_name):
+    def remove_with_probability(self, count, manipulation_clas, clas, network_name):
         self.global_homophilies  = []
+        class_partitions = []
+        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+        class_partitions.append(len(nodes_with_manipulation_clas)/self.size)
         nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
         probabilities = self.get_probabilities(nodes_with_clas)
         homo_list_before = self.local_homophily()
         utils.save_to_file(homo_list_before, network_name, 'remove_with_probability_homo_list_before')
-        for _ in range(count-1):
+        count = len(nodes_with_clas)
+        for _ in range(count):
             node = self.pick_with_probability(nodes_with_clas, probabilities)
             try:
                 self.G.remove_node(node)
+                nodes_with_clas.remove(node)
+                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 self.global_homophily()
             except nx.NetworkXError:
                 print 'node does not exist in graph'          
@@ -106,19 +120,24 @@ class Homophily:
         utils.save_to_file(self.global_homophilies, network_name, 'remove_with_probability_global_homophilies')        
         utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_with_probability')
         utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_with_probability')
+        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_with_probability')
 
 
-    def remove_by_ranking(self, count, clas, network_name):
+    def remove_by_ranking(self, manipulation_clas, count, clas, network_name):
         self.global_homophilies  = []
+        class_partitions = []
+        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
         sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
         nodes_with_clas = [node for node in sorted_by_degree if self.get_node_class(node[0]) == clas]
         homo_list_before = self.local_homophily()
         utils.save_to_file(homo_list_before, network_name, 'remove_by_ranking_homo_list_before')
-        for i in range(len(nodes_with_clas)):
+        count = len(nodes_with_clas)
+        for i in range(count):
             print i
             node = nodes_with_clas[i][0]
             try:
                 self.G.remove_node(node)
+                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 self.global_homophily()
             except nx.NetworkXError:
                 print 'node does not exist in graph'
@@ -127,6 +146,7 @@ class Homophily:
         utils.save_to_file(self.global_homophilies, network_name, 'remove_by_ranking_global_homophilies')   
         utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_by_ranking')
         utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_by_ranking')
+        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_by_ranking')
 
     def load_graph(self, filename):
         G = nx.read_gml(filename)
