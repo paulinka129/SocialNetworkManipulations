@@ -1,6 +1,9 @@
 from homophily import Homophily
 import utils
+<<<<<<< HEAD
 import consts
+=======
+>>>>>>> 18e8ee96bbcd58072ac7bbc8c47769db08bedb1e
 
 ### badania ###
 
@@ -8,8 +11,13 @@ import consts
 # nodes = utils.read_node_list()
 # utils.write_gml_file(nodes, edges)
 
+<<<<<<< HEAD
 # homophily = Homophily('datasets/amd_network_class.gml')
 
+=======
+homophily = Homophily('datasets/amd_network_class.gml')
+homophily.print_classes()
+>>>>>>> 18e8ee96bbcd58072ac7bbc8c47769db08bedb1e
 
 # homophily2 = Homophily('datasets/polblogs.gml')
 # homophily3 = Homophily('datasets/polblogs.gml')
@@ -26,7 +34,11 @@ import consts
 # homophily.add_by_ranking(1,1)
 
 # print 'start add_random'
+<<<<<<< HEAD
 # homophily.add_random(homophily.size, 'E', 'AMD')
+=======
+# homophily.add_random(homophily.size, Consts.class1)
+>>>>>>> 18e8ee96bbcd58072ac7bbc8c47769db08bedb1e
 # print 'stop add_random'
 
 # print 'start add_with_probability'
@@ -55,6 +67,7 @@ import consts
 
 
 
+<<<<<<< HEAD
 # homo_list_before = utils.read_from_file('blogs','remove_with_probability_homo_list_before')
 # homo_list_after = utils.read_from_file('blogs', 'remove_with_probability_homo_list_after')
 # utils.plot_local_homophily(homo_list_before, homo_list_after, 'blogs', 'remove_with_probability')
@@ -99,3 +112,11 @@ print 'stop remove_random'
 
 # global_homophilies = utils.read_from_file('blogs', 'remove_with_probability_global_homophilies')
 # utils.plot_global_homophily(global_homophilies, 'blogs', 'remove_with_probability')
+=======
+# homo_list_before = read_from_file('add_random_homo_list_before')
+# homo_list_after = read_from_file('add_random_homo_list_after')
+# plot(homo_list_before, homo_list_after, 'add_random_homo_with_density')
+# global_homophilies = read_from_file('add_random_global_homophilies')
+# plot_global(global_homophilies, 'add_random')
+
+>>>>>>> 18e8ee96bbcd58072ac7bbc8c47769db08bedb1e
