@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from __future__ import division
 import numpy as np
 import networkx as nx
@@ -7,7 +6,8 @@ import graphviz
 from consts import Consts
 import utils
 import random
-from random import choice
+from random import choices
+from collections import defaultdict
 
 class Homophily:
 
@@ -19,152 +19,116 @@ class Homophily:
         self.remove_nodes_without_edges()
         self.size = self.nodes_count()
         self.global_homophilies  = []
+        self.clas_list = self.get_all_clas()
+        self.homophily_per_clas = defaultdict(list)
 
-    def add_random(self, count, clas, network_name):
-        self.global_homophilies  = []
-        homo_list_before = self.local_homophily()
-        utils.save_to_file(homo_list_before, network_name, 'add_random_homo_list_before')
-        nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
-        for i in range(len(nodes_with_clas)):
-            random_node = choice(list(self.G.nodes()))
-            self.add_node(random_node, i, clas)
-            self.global_homophily()
-            print i
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'add_random_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'add_random_global_homophilies')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'add_with_probability')
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'add_random')
-
-
-    def add_with_probability(self, count, clas, network_name=None):
-        self.global_homophilies  = []
-        probabilities = self.get_graph_probabilities()
-        homo_list_before = self.local_homophily()
-        utils.save_to_file(homo_list_before, network_name, 'add_with_probability_homo_list_before')
-        nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
-        for i in range(len(nodes_with_clas)):
-            node = self.pick_with_probability(self.G.nodes(), probabilities)
-            self.add_node(node, i, clas)
-            self.global_homophily()
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'add_with_probability_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'add_with_probability_global_homophilies')
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'add_with_probability')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'add_with_probability')
-
-    def add_by_ranking(self, count, clas, network_name):
-        self.global_homophilies  = []
-        sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
-        homo_list_before = self.local_homophily()
-        utils.save_to_file(homo_list_before, network_name, 'add_by_ranking_list_before')
-        nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
-        for i in range(len(nodes_with_clas)):
-            node = sorted_by_degree[i][0]
-            self.add_node(node, i, clas)
-            self.global_homophily()
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'add_by_ranking_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'add_by_ranking_global_homophilies')
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'add_by_ranking')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'add_by_ranking')
-
-    def remove_random(self, count, manipulation_clas, clas, network_name):
+    def manipulate(self, strategy_func, strategy_name, pick_strategy, manipulation_clas, network_name):
         self.global_homophilies  = []
         class_partitions = []
         nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
         class_partitions.append(len(nodes_with_manipulation_clas)/self.size)
         homo_list_before = self.local_homophily()
-        nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
-        utils.save_to_file(homo_list_before, network_name, 'remove_random_homo_list_before')
-        count = len(nodes_with_clas)
+        nodes_to_remove = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
+        utils.save_to_file(homo_list_before, network_name, '{0}_homo_list_before'.format(strategy_name))
+
+        ''' add, remove or change node ''' 
+        strategy_func(nodes_to_remove, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas)
+
+
+        homo_list_after = self.local_homophily()
+        utils.save_to_file(homo_list_after, network_name, '{0}_homo_list_after'.format(strategy_name))
+        utils.save_to_file(self.global_homophilies, network_name, '{0}_global_homophilies'.format(strategy_name))
+        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, strategy_name)
+        utils.plot_global_homophily(self.global_homophilies, network_name, strategy_name)
+        utils.plot_all(class_partitions, self.global_homophilies, self.homophily_per_clas, manipulation_clas, network_name, strategy_name)
+
+    def remove_strategy(self, nodes_to_remove, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        count = len(nodes_to_remove)
         for i in range(count):
-            random_node = choice(nodes_with_clas)
+
+            ''' random, sampling with probability or according to ranking by degree '''
+            picked_node = pick_strategy(nodes_to_remove)
             try:
-                self.G.remove_node(random_node)
-                nodes_with_clas.remove(random_node)
+                self.G.remove_node(picked_node)
+                nodes_to_remove.remove(picked_node)
                 class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 self.global_homophily()
-                print i
+                self.count_homophily_per_clas()
+                print(i)
             except nx.NetworkXError:
-                print 'node does not exist in graph'
+                print('node does not exist in graph')
+            except Exception as ex:
+                print(ex)
 
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'remove_random_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'remove_random_global_homophilies')
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_random')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_random')
-        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_random')
+    def add_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        for i in range(len(nodes_to_add)):
 
-
-    def remove_with_probability(self, count, manipulation_clas, clas, network_name):
-        self.global_homophilies  = []
-        class_partitions = []
-        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
-        class_partitions.append(len(nodes_with_manipulation_clas)/self.size)
-        nodes_with_clas = [node for node in self.G.nodes() if self.get_node_class(node) == clas]
-        probabilities = self.get_probabilities(nodes_with_clas)
-        homo_list_before = self.local_homophily()
-        utils.save_to_file(homo_list_before, network_name, 'remove_with_probability_homo_list_before')
-        count = len(nodes_with_clas)
-        for _ in range(count):
-            node = self.pick_with_probability(nodes_with_clas, probabilities)
-            try:
-                self.G.remove_node(node)
-                nodes_with_clas.remove(node)
+            ''' random, sampling with probability or according to ranking by degree '''
+            picked_node = pick_strategy(list(self.G.nodes()))   
+            try:         
+                self.add_node(picked_node, i, manipulation_clas)
+                nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
                 class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 self.global_homophily()
+                self.count_homophily_per_clas()
+                print(i)
+            except Exception as ex:
+                print(ex)
+
+    def change_class_strategy(self, nodes_to_change, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        count = len(nodes_to_change)
+        for i in range(count):
+
+            ''' random, sampling with probability or according to ranking by degree '''
+            picked_node = pick_strategy(nodes_to_change)
+            try:
+                self.G.node[picked_node]['value'] = manipulation_clas
+                nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
+                self.global_homophily()
+                self.count_homophily_per_clas()
+                print(i)
             except nx.NetworkXError:
-                print 'node does not exist in graph'          
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'remove_with_probability_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'remove_with_probability_global_homophilies')        
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_with_probability')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_with_probability')
-        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_with_probability')
+                print('node does not exist in graph')
+            except Exception as ex:
+                print(ex)
 
+    def pick_random(self, nodes):
+        return random.choice(nodes)
 
-    def remove_by_ranking(self, manipulation_clas, count, clas, network_name):
-        self.global_homophilies  = []
-        class_partitions = []
-        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+    def pick_with_probability(self, nodes):
+        probabilities = self.get_probabilities(nodes)
+        all_zeros = all(elem == 0 for elem in probabilities)
+        if (not all_zeros):
+            return choices(nodes, probabilities)[0]
+        else:
+            return self.pick_random(nodes)
+
+    def pick_by_ranking(self, nodes):
         sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
-        nodes_with_clas = [node for node in sorted_by_degree if self.get_node_class(node[0]) == clas]
-        homo_list_before = self.local_homophily()
-        utils.save_to_file(homo_list_before, network_name, 'remove_by_ranking_homo_list_before')
-        count = len(nodes_with_clas)
-        for i in range(count):
-            print i
-            node = nodes_with_clas[i][0]
-            try:
-                self.G.remove_node(node)
-                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
-                self.global_homophily()
-            except nx.NetworkXError:
-                print 'node does not exist in graph'
-        homo_list_after = self.local_homophily()
-        utils.save_to_file(homo_list_after, network_name, 'remove_by_ranking_homo_list_after')
-        utils.save_to_file(self.global_homophilies, network_name, 'remove_by_ranking_global_homophilies')   
-        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, 'remove_by_ranking')
-        utils.plot_global_homophily(self.global_homophilies, network_name, 'remove_by_ranking')
-        utils.plot_all(class_partitions, self.global_homophilies, network_name, 'remove_by_ranking')
+        result = [node[0] for node in sorted_by_degree if node[0] in nodes]
+        return result[0]
 
     def load_graph(self, filename):
         G = nx.read_gml(filename)
         return G
+
+    def get_size_of_manipulated_set(self, manipulation_clas):
+        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+        return len(nodes_with_manipulation_clas)
     
     def print_classes(self):
         for node in self.G.nodes():
-            print self.G.node[node]['value']
+            print(self.G.node[node]['value'])
 
     def print_nodes_with_class(self, value):
         nodeWithClass = [n for n in self.G.nodes() if self.G.node[n]['value'] == value]
         for node in nodeWithClass:
-            print "{0}, {1}".format(node, self.G.node[node]['value'])
+            print("{0}, {1}".format(node, self.G.node[node]['value']))
 
     def remove_nodes_without_edges(self):
-        outdeg = self.G.degree()
-        to_remove = [n[0] for n in outdeg if n[1] < 1]
+        deg = self.G.degree()
+        to_remove = [n[0] for n in deg if n[1] < 1]
         self.G.remove_nodes_from(to_remove)
 
     def nodes_count(self):
@@ -179,6 +143,12 @@ class Homophily:
 
     def indicate(self, a, b):
         if a == b:
+            return 1
+        else:
+            return 0
+
+    def indicate_bool(self, a, b):
+        if (a and b):
             return 1
         else:
             return 0
@@ -198,40 +168,24 @@ class Homophily:
         edges_count = len(list(self.G.edges()))
         for edge in self.G.edges():
             global_homo += (self.indicate(self.get_node_class(edge[0]), self.get_node_class(edge[1]))/edges_count)
-        # for node in self.G.nodes():
-        #     homo = 0.0
-        #     n_count = ((self.nodes_count()+1)**2 - 1)//2
-        #     for inner in self.G.nodes():
-        #         if node != inner:
-        #             homo = homo + (self.indicate(self.get_node_class(node), self.get_node_class(inner))/n_count)
-        #     global_homo.append(homo)
-        # return global_homo
         self.global_homophilies.append(global_homo)
+
+    def count_homophily_per_clas(self):
+        edges_count = len(list(self.G.edges()))
+        for clas in self.clas_list:
+            homo = 0.0
+            for edge in self.G.edges():
+                homo += (self.indicate_bool(self.get_node_class(edge[0]) == clas, self.get_node_class(edge[1]) == clas)/edges_count)
+            self.homophily_per_clas[clas].append(homo)
 
     def add_random_node(self, index, clas): 
         self.G.add_node(index, value=clas)
-        random_node = choice(list(self.G.nodes()))
+        random_node = random.choice(list(self.G.nodes()))
         self.G.add_edge(index, random_node)
 
     def add_node(self, node, index, clas):
         self.G.add_node(index, value=clas)
         self.G.add_edge(index, node)
-
-    def add_random_nodes(self, count, clas):
-        utils.plot_homophily(self.local_homophily(), 'local_start' )
-        for i in range(count):
-            self.add_random_node(i, clas)
-        utils.plot_homophily(self.local_homophily(), 'local_end')
-
-    def remove_random_node(self):
-        random_node = choice(list(self.G.nodes()))
-        self.G.remove_node(random_node)
-
-    def remove_random_nodes(self, count):
-        utils.plot_homophily(self.local_homophily(), 'local_start_remove' )
-        for _ in range(count):
-            self.remove_random_node()
-        utils.plot_homophily(self.local_homophily(), 'local_end_remove')
 
     def get_graph_probabilities(self):
         sum_degree = 0
@@ -244,21 +198,12 @@ class Homophily:
         sum_degree = 0
         for node in nodes_list:
             sum_degree = sum_degree + self.G.degree(node)
-        probabilities = [(self.G.degree(node) / sum_degree) for node in self.G.nodes()]
+        probabilities = [((self.G.degree(node) / sum_degree) if sum_degree != 0 else 0) for node in nodes_list]
         return probabilities
 
-
-    def pick_with_probability(self, nodes, probabilities):
-        x = random.uniform(0, 1)
-        cumulative_probability = 0.0        
-        for item, item_probability in zip(list(nodes), probabilities):
-            cumulative_probability += item_probability
-            if x < cumulative_probability: break
-        return item
-
-    def pick_nodes_with_probability(self, count):
-        probabilities = self.get_graph_probabilities()
-        picked_nodes = []
-        for _ in range(count):
-            picked = self.pick_with_probability(self.G.nodes(), probabilities)
-            picked_nodes.append(picked)
+    def get_all_clas(self):
+        clas_list = set()
+        for node in self.G.nodes():
+            clas = self.get_node_class(node)
+            clas_list.add(clas)
+        return clas_list
