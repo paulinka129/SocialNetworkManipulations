@@ -123,5 +123,8 @@ import consts
 # homophily = Homophily('datasets/polblogs.gml')
 # homophily.manipulate(homophily.remove_strategy, 'remove_with_probability', homophily.pick_with_probability, 1, 'blogs')
 
+# homophily = Homophily('datasets/amd_network_class.gml')
+# homophily.manipulate(homophily.remove_strategy, 'remove_by_ranking', homophily.pick_by_ranking, 'E', 'AMD')
+
 homophily = Homophily('datasets/amd_network_class.gml')
-homophily.manipulate(homophily.remove_strategy, 'remove_by_ranking', homophily.pick_by_ranking, 'E', 'AMD')
+homophily.manipulate(homophily.change_class_strategy, 'change_class_random', homophily.pick_random, 'E', 'AMD')

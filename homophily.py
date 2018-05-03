@@ -6,7 +6,7 @@ import graphviz
 from consts import Consts
 import utils
 import random
-from random import choices
+from random import choices, uniform
 from collections import defaultdict
 
 class Homophily:
@@ -47,7 +47,7 @@ class Homophily:
         for i in range(count):
 
             ''' random, sampling with probability or according to ranking by degree '''
-            picked_node = pick_strategy(nodes_to_remove)
+            picked_node = pick_strategy(manipulation_clas, nodes_to_remove, i)
             try:
                 self.G.remove_node(picked_node)
                 nodes_to_remove.remove(picked_node)
@@ -64,7 +64,7 @@ class Homophily:
         for i in range(len(nodes_to_add)):
 
             ''' random, sampling with probability or according to ranking by degree '''
-            picked_node = pick_strategy(list(self.G.nodes()))   
+            picked_node = pick_strategy(manipulation_clas, list(self.G.nodes()), i)   
             try:         
                 self.add_node(picked_node, i, manipulation_clas)
                 nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
@@ -80,11 +80,12 @@ class Homophily:
         for i in range(count):
 
             ''' random, sampling with probability or according to ranking by degree '''
-            picked_node = pick_strategy(nodes_to_change)
+            picked_node = pick_strategy(manipulation_clas, nodes_to_change, i)
             try:
                 self.G.node[picked_node]['value'] = manipulation_clas
                 nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
                 class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
+                nodes_to_change.remove(picked_node)
                 self.global_homophily()
                 self.count_homophily_per_clas()
                 print(i)
@@ -93,21 +94,30 @@ class Homophily:
             except Exception as ex:
                 print(ex)
 
-    def pick_random(self, nodes):
+    def pick_random(self, manipulation_clas, nodes, i):
         return random.choice(nodes)
 
-    def pick_with_probability(self, nodes):
+    def pick_with_probability(self, manipulation_clas, nodes, i):
         probabilities = self.get_probabilities(nodes)
         all_zeros = all(elem == 0 for elem in probabilities)
         if (not all_zeros):
             return choices(nodes, probabilities)[0]
         else:
-            return self.pick_random(nodes)
+            return self.pick_random(manipulation_clas, nodes, i)
 
-    def pick_by_ranking(self, nodes):
+    def pick_with_custom_probability(self, manipulation_clas, nodes, i):
+        probabilities = self.generate_probabilities(nodes, manipulation_clas, 0, 0.4, 0.6, 1.0)
+        return choices(nodes, probabilities)[0]
+
+    def pick_by_ranking(self, manipulation_clas, nodes, i):
         sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
         result = [node[0] for node in sorted_by_degree if node[0] in nodes]
         return result[0]
+
+    def pick_by_ranking_for_add(self, manipulation_clas, nodes, i):
+        sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
+        result = [node[0] for node in sorted_by_degree if node[0] in nodes]
+        return result[i]
 
     def load_graph(self, filename):
         G = nx.read_gml(filename)
@@ -207,3 +217,12 @@ class Homophily:
             clas = self.get_node_class(node)
             clas_list.add(clas)
         return clas_list
+
+    def generate_probabilities(self, nodes, manipulate_clas, low1, high1, low2, high2):
+        prob = []
+        for node in nodes:
+            if (self.get_node_class(node) == manipulate_clas):
+                prob.append(uniform(low1, high1))
+            else:
+                prob.append(uniform(low2, high2))
+        return prob
