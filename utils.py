@@ -6,8 +6,13 @@ import matplotlib.pyplot as plt
 import graphviz
 from random import choices
 
-mpl.rcParams['savefig.dpi'] = 120
-mpl.rcParams['figure.dpi'] = 120
+# mpl.rcParams['savefig.dpi'] = 120
+# mpl.rcParams['figure.dpi'] = 120
+
+# import matplotlib as mpl
+
+# mpl.rcParams['savefig.dpi'] = 120
+# mpl.rcParams['figure.dpi'] = 120
 
 def read_graph_from_gml_file():
     pass
