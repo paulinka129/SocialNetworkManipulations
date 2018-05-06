@@ -75,6 +75,24 @@ class Homophily:
             except Exception as ex:
                 print(ex)
 
+    def add_while_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        i = 0
+        last_global_homophily = 0
+        while (i < 1000 and last_global_homophily < 1):
+
+            ''' random, sampling with probability or according to ranking by degree '''
+            picked_node = pick_strategy(manipulation_clas, list(self.G.nodes()), i)   
+            try:         
+                self.add_node(picked_node, i, manipulation_clas)
+                nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+                class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
+                last_global_homophily = self.global_homophily()
+                self.count_homophily_per_clas()
+                print(str(i) + ': ' + str(last_global_homophily))
+            except Exception as ex:
+                print(ex)
+            i += 1
+
     def change_class_strategy(self, nodes_to_change, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
         count = len(nodes_to_change)
         for i in range(count):
@@ -179,6 +197,7 @@ class Homophily:
         for edge in self.G.edges():
             global_homo += (self.indicate(self.get_node_class(edge[0]), self.get_node_class(edge[1]))/edges_count)
         self.global_homophilies.append(global_homo)
+        return global_homo
 
     def count_homophily_per_clas(self):
         edges_count = len(list(self.G.edges()))
