@@ -1,7 +1,6 @@
 Creator "Lada Adamic on Tue Aug 15 2006"
 graph [
   directed 1
-  multigraph 1
   node [
     id 1
     label "100monkeystyping.com"
@@ -28416,10 +28415,6 @@ graph [
   ]
   edge [
     source 1047
-    target 1047
-  ]
-  edge [
-    source 1047
     target 788
   ]
   edge [
@@ -28492,10 +28487,6 @@ graph [
   ]
   edge [
     source 1047
-    target 1045
-  ]
-  edge [
-    source 1047
     target 1048
   ]
   edge [
@@ -28524,10 +28515,6 @@ graph [
   ]
   edge [
     source 1047
-    target 1091
-  ]
-  edge [
-    source 1047
     target 1172
   ]
   edge [
@@ -28537,10 +28524,6 @@ graph [
   edge [
     source 1047
     target 1101
-  ]
-  edge [
-    source 1047
-    target 1461
   ]
   edge [
     source 1047
@@ -28576,19 +28559,11 @@ graph [
   ]
   edge [
     source 1047
-    target 1000
-  ]
-  edge [
-    source 1047
     target 908
   ]
   edge [
     source 1047
     target 919
-  ]
-  edge [
-    source 1047
-    target 952
   ]
   edge [
     source 1047
@@ -59496,10 +59471,6 @@ graph [
   ]
   edge [
     source 24
-    target 24
-  ]
-  edge [
-    source 24
     target 798
   ]
   edge [
@@ -59980,83 +59951,7 @@ graph [
   ]
   edge [
     source 1047
-    target 762
-  ]
-  edge [
-    source 1047
-    target 539
-  ]
-  edge [
-    source 1047
-    target 885
-  ]
-  edge [
-    source 1047
-    target 1191
-  ]
-  edge [
-    source 1047
-    target 312
-  ]
-  edge [
-    source 1047
-    target 878
-  ]
-  edge [
-    source 1047
-    target 1150
-  ]
-  edge [
-    source 1047
-    target 1399
-  ]
-  edge [
-    source 1047
-    target 764
-  ]
-  edge [
-    source 1047
-    target 249
-  ]
-  edge [
-    source 1047
-    target 1095
-  ]
-  edge [
-    source 1047
-    target 1479
-  ]
-  edge [
-    source 1047
     target 1045
-  ]
-  edge [
-    source 1047
-    target 1048
-  ]
-  edge [
-    source 1047
-    target 1325
-  ]
-  edge [
-    source 1047
-    target 1245
-  ]
-  edge [
-    source 1047
-    target 1153
-  ]
-  edge [
-    source 1047
-    target 798
-  ]
-  edge [
-    source 1047
-    target 1277
-  ]
-  edge [
-    source 1047
-    target 1209
   ]
   edge [
     source 1047
@@ -60064,75 +59959,11 @@ graph [
   ]
   edge [
     source 1047
-    target 1172
-  ]
-  edge [
-    source 1047
-    target 1215
-  ]
-  edge [
-    source 1047
-    target 1101
-  ]
-  edge [
-    source 1047
     target 1461
   ]
   edge [
     source 1047
-    target 1306
-  ]
-  edge [
-    source 1047
-    target 944
-  ]
-  edge [
-    source 1047
-    target 826
-  ]
-  edge [
-    source 1047
-    target 1317
-  ]
-  edge [
-    source 1047
-    target 810
-  ]
-  edge [
-    source 1047
-    target 1478
-  ]
-  edge [
-    source 1047
-    target 963
-  ]
-  edge [
-    source 1047
-    target 855
-  ]
-  edge [
-    source 1047
     target 1000
-  ]
-  edge [
-    source 1047
-    target 908
-  ]
-  edge [
-    source 1047
-    target 919
-  ]
-  edge [
-    source 1047
-    target 1447
-  ]
-  edge [
-    source 1047
-    target 1158
-  ]
-  edge [
-    source 1047
-    target 949
   ]
   edge [
     source 1226
@@ -84657,98 +84488,6 @@ graph [
   edge [
     source 1395
     target 1459
-  ]
-  edge [
-    source 24
-    target 23
-  ]
-  edge [
-    source 24
-    target 798
-  ]
-  edge [
-    source 24
-    target 55
-  ]
-  edge [
-    source 24
-    target 102
-  ]
-  edge [
-    source 24
-    target 107
-  ]
-  edge [
-    source 24
-    target 154
-  ]
-  edge [
-    source 24
-    target 155
-  ]
-  edge [
-    source 24
-    target 170
-  ]
-  edge [
-    source 24
-    target 495
-  ]
-  edge [
-    source 24
-    target 391
-  ]
-  edge [
-    source 24
-    target 402
-  ]
-  edge [
-    source 24
-    target 434
-  ]
-  edge [
-    source 24
-    target 563
-  ]
-  edge [
-    source 24
-    target 570
-  ]
-  edge [
-    source 24
-    target 610
-  ]
-  edge [
-    source 24
-    target 623
-  ]
-  edge [
-    source 24
-    target 641
-  ]
-  edge [
-    source 24
-    target 642
-  ]
-  edge [
-    source 24
-    target 535
-  ]
-  edge [
-    source 24
-    target 644
-  ]
-  edge [
-    source 24
-    target 741
-  ]
-  edge [
-    source 24
-    target 89
-  ]
-  edge [
-    source 24
-    target 963
   ]
   edge [
     source 782
