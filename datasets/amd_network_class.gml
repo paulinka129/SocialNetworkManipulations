@@ -1,6 +1,6 @@
 Creator "Paulina Brzechffa"
 graph [
-  multigraph 1
+  directed 1
   node [
     id 216
     label 216

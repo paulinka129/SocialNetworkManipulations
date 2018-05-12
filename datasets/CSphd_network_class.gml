@@ -1,6 +1,6 @@
 Creator "Paulina Brzechffa"
 graph [
-  multigraph 1
+  directed 1
   node [
     id 1
     label 1
@@ -819,7 +819,7 @@ graph [
   node [
     id 213
     label 213
-    value "'80"
+    value "80"
   ]
   node [
     id 215
@@ -1484,7 +1484,7 @@ graph [
   node [
     id 382
     label 382
-    value "'40"
+    value "40"
   ]
   node [
     id 383
@@ -1819,7 +1819,7 @@ graph [
   node [
     id 463
     label 463
-    value "'80"
+    value "80"
   ]
   node [
     id 464
@@ -3094,7 +3094,7 @@ graph [
   node [
     id 796
     label 796
-    value "'90"
+    value "90"
   ]
   node [
     id 798
@@ -3164,7 +3164,7 @@ graph [
   node [
     id 812
     label 812
-    value "'90"
+    value "90"
   ]
   node [
     id 813
@@ -3329,7 +3329,7 @@ graph [
   node [
     id 856
     label 856
-    value "'70"
+    value "70"
   ]
   node [
     id 857
@@ -4054,7 +4054,7 @@ graph [
   node [
     id 1038
     label 1038
-    value "'60"
+    value "60"
   ]
   node [
     id 1040
@@ -4329,7 +4329,7 @@ graph [
   node [
     id 1120
     label 1120
-    value "'70"
+    value "70"
   ]
   node [
     id 1121
@@ -4749,7 +4749,7 @@ graph [
   node [
     id 1223
     label 1223
-    value "'80"
+    value "80"
   ]
   node [
     id 1224
@@ -5054,7 +5054,7 @@ graph [
   node [
     id 1306
     label 1306
-    value "'50"
+    value "50"
   ]
   node [
     id 1308
@@ -6089,7 +6089,7 @@ graph [
   node [
     id 1571
     label 1571
-    value "'90"
+    value "90"
   ]
   node [
     id 1572
