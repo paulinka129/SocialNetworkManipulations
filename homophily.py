@@ -21,6 +21,8 @@ class Homophily:
         self.global_homophilies  = []
         self.clas_list = self.get_all_clas()
         self.homophily_per_clas = defaultdict(list)
+        self.average_degree = self.get_average_degree(self.G)
+        # self.pagerank = self.evaluate_pagerank()
 
     def manipulate(self, strategy_func, strategy_name, pick_strategy, manipulation_clas, network_name):
         self.global_homophilies  = []
@@ -83,7 +85,7 @@ class Homophily:
             ''' random, sampling with probability or according to ranking by degree '''
             picked_node = pick_strategy(manipulation_clas, list(self.G.nodes()), i)   
             try:         
-                self.add_node(picked_node, i, manipulation_clas)
+                self.add_node(picked_node, (i+10000), manipulation_clas)
                 nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
                 class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 last_global_homophily = self.global_homophily()
@@ -92,6 +94,34 @@ class Homophily:
             except Exception as ex:
                 print(ex)
             i += 1
+
+    def add_big_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        number_of_edges = int(np.ceil(5 * self.average_degree))
+        i = 0
+        last_global_homophily = 0
+        max_add = self.size*2
+        while (i < max_add and last_global_homophily < 1):
+
+            for n in range(number_of_edges):
+                ''' random, sampling with probability or according to ranking by degree '''
+                picked_node = pick_strategy(manipulation_clas, list(self.G.nodes()), i)   
+                try:         
+                    self.add_node(picked_node, (i+10000), manipulation_clas)                    
+                except Exception as ex:
+                    print(ex)
+            nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+            class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
+            last_global_homophily = self.global_homophily()
+            self.count_homophily_per_clas()
+            print(str(i) + ': ' + str(last_global_homophily))
+            i += 1
+
+
+    def add_medium_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        pass
+
+    def add_small_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
+        pass
 
     def change_class_strategy(self, nodes_to_change, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
         count = len(nodes_to_change)
@@ -130,6 +160,12 @@ class Homophily:
     def pick_by_ranking(self, manipulation_clas, nodes, i):
         sorted_by_degree = sorted(self.G.degree, key=lambda x: x[1], reverse=True)
         result = [node[0] for node in sorted_by_degree if node[0] in nodes]
+        return result[0]
+
+    def pick_by_pagerank(self, manipulation_clas, nodes, i):
+        pr = nx.pagerank(self.G)
+        sorted_by_pagerank = sorted(pr.items(), key=lambda x: x[1], reverse=True)
+        result = [node[0] for node in sorted_by_pagerank if node[0] in nodes]
         return result[0]
 
     def pick_by_ranking_for_add(self, manipulation_clas, nodes, i):
@@ -181,6 +217,11 @@ class Homophily:
         else:
             return 0
 
+    def evaluate_pagerank(self):
+        pg = nx.pagerank(self.G)
+        sorted_by_pagerank = sorted(pg, key=lambda x: x[1], reverse=True)
+        return sorted_by_pagerank
+
     def local_homophily(self):
         local_homo = []
         for node in self.G.nodes():
@@ -200,11 +241,13 @@ class Homophily:
         return global_homo
 
     def count_homophily_per_clas(self):
-        edges_count = len(list(self.G.edges()))
+        # all_edges = len(list(self.G.edges()))
         for clas in self.clas_list:
             homo = 0.0
-            for edge in self.G.edges():
-                homo += (self.indicate_bool(self.get_node_class(edge[0]) == clas, self.get_node_class(edge[1]) == clas)/edges_count)
+            edges_per_clas = [edge for edge in self.G.edges() if (self.get_node_class(edge[0]) == clas or self.get_node_class(edge[1]) == clas)] 
+            edge_count = len(edges_per_clas)
+            for edge in edges_per_clas:
+                homo += (self.indicate(self.get_node_class(edge[0]), self.get_node_class(edge[1]))/edge_count)
             self.homophily_per_clas[clas].append(homo)
 
     def add_random_node(self, index, clas): 
@@ -229,6 +272,13 @@ class Homophily:
             sum_degree = sum_degree + self.G.degree(node)
         probabilities = [((self.G.degree(node) / sum_degree) if sum_degree != 0 else 0) for node in nodes_list]
         return probabilities
+
+    def get_average_degree(self, graph):
+        sum_degree = 0
+        for node in graph.nodes():
+            sum_degree = sum_degree + graph.degree(node)
+        average_degree = sum_degree / len(list(graph.nodes()))
+        return average_degree
 
     def get_all_clas(self):
         clas_list = set()

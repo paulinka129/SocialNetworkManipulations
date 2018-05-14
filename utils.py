@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import graphviz
+import itertools
 from random import choices
 
 # mpl.rcParams['savefig.dpi'] = 120
@@ -19,6 +20,9 @@ def read_graph_from_gml_file():
 
 def read_graph_from_txt_file():
     pass
+
+def flip(items, ncol):
+    return itertools.chain(*[items[i::ncol] for i in range(ncol)])
 
 def plot_homophily(homo_list, filename):
     num_bins = 10
@@ -86,7 +90,7 @@ def plot_all(class_partition, global_homophilies, homophily_per_clas, manipulati
         if (homo_list == manipulation_clas):
             ax.plot(range(1,len(val)+1), val, color='green', label='homofilia klasy {0}'.format(homo_list))
         else:
-            ax.plot(range(1,len(val)+1), val)
+            ax.plot(range(1,len(val)+1), val, label='homofilia klasy {0}'.format(homo_list))
 
     ### - udzial klasy  
     ax.plot(range(1, x_max), class_partition, color='green', ls='--', label='udzial klasy {0}'.format(manipulation_clas))
@@ -97,9 +101,12 @@ def plot_all(class_partition, global_homophilies, homophily_per_clas, manipulati
     ax.set_xlim(0, x_max)
     ax.set_ylim(0, 1)
 
+    handles, labels = ax.get_legend_handles_labels()
+
     ax.set_xlabel(title)
 
-    ax.legend(loc='best')
+    # ax.legend(loc='best', fontsize = 'x-small')
+    ax.legend(flip(handles, 2), flip(labels, 2), loc='best', ncol=2, fontsize = 'x-small')
 
     # ax.set_xlabel('liczba usunietych wierzcholkow')
     # ax.set_ylabel('homofilia globalna')
@@ -107,33 +114,34 @@ def plot_all(class_partition, global_homophilies, homophily_per_clas, manipulati
 
 def read_node_list():
     node_dict = {}
-    with open('datasets/amd_network_class.txt', "r") as f:
+    with open('datasets/Yeast_class.txt', "r") as f:
         for line in f:
             node_class = line.split()
-            node_dict[node_class[0]] = node_class[1]
+            node_dict[node_class[0]] = (node_class[1]).replace('"','')
     return node_dict
 
 def read_edge_list():
     edge_dict = []
-    with open('datasets/amd_network_network.txt', "r") as f:
+    with open('datasets/Yeast_network.txt', "r") as f:
         for line in f:
             edge_class = line.split()
-            edge_dict.append((edge_class[0], edge_class[1]))
+            if (edge_class[0] != edge_class[1]):
+                edge_dict.append((edge_class[0], edge_class[1]))
     return edge_dict
 
 
 def write_gml_file(node_dict, edge_dict):
-    with open('datasets/amd_network_class.gml', "w") as f:
+    with open('datasets/Yeast_network_class.gml', "w") as f:
         f.write('Creator ' + '"Paulina Brzechffa"' +"\n")
         f.write('graph [' +"\n")
-        f.write('  multigraph 1' +"\n")
+        f.write('  directed 1' +"\n")
         for val in node_dict:
             f.write('  node [' +"\n")
             f.write('    id ' + val +"\n")
             f.write('    label ' + val +"\n")
             f.write('    value ' + '"{}"'.format(node_dict[val]) +"\n")
             f.write('  ]' +"\n")
-        print(edge_dict)
+        # print(edge_dict)
         for val in edge_dict:
             f.write('  edge [' +"\n")
             f.write('    source ' + val[0] +"\n")
@@ -159,3 +167,7 @@ def read_from_file_path(path):
         for line in f:
             results.append(float(line.strip()))
     return results
+
+nodes = read_node_list()
+edges = read_edge_list()
+write_gml_file(nodes, edges)
