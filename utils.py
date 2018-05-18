@@ -3,7 +3,6 @@ import numpy as np
 import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import graphviz
 import itertools
 from random import choices
 
@@ -153,6 +152,12 @@ def save_to_file(results, network_name, filename):
     with open('results/{0}/{1}'.format(network_name, filename), "w") as f:
         for s in results:
             f.write(str(s) +"\n")
+
+def save_to_file_lbp(filename, *args):
+    with open('lbp/{0}'.format(filename), "w") as f:
+        for line in list(args):
+            f.write(str(line) +"\n")
+
 
 def read_from_file(network_name, filename):
     results = []
