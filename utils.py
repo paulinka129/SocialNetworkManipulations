@@ -153,8 +153,8 @@ def save_to_file(results, network_name, filename):
         for s in results:
             f.write(str(s) +"\n")
 
-def save_to_file_lbp(filename, *args):
-    with open('lbp/{0}'.format(filename), "w") as f:
+def save_to_file_lbp(filename, percent, index, *args):
+    with open('lbp/{0}_{1}_{2}'.format(filename, percent, index), "w") as f:
         for line in list(args):
             f.write(str(line) +"\n")
 

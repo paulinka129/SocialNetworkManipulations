@@ -326,6 +326,39 @@ class Homophily:
         A = nx.adjacency_matrix(self.G)
         return A.todense()
 
+    def evaluate_lbp_100(self):
+        lbp_arr = []
+        for i in range(1000):
+            lbp = self.evaluate_lbp()
+            lbp_sum = np.sum(lbp)
+            lbp_arr.append(lbp_sum)
+        print(lbp_arr)
+        mean = np.mean(lbp_arr)
+        median = np.median(lbp_arr)
+        print('mean', mean)
+        print('median ', median)
+
+    def evaluate_lbp_remove_all(self, manipulation_clas):
+        percent = 0.1
+        for i in range(10):
+            print('percent ', percent)
+            self.evaluate_lbp_with_remove_manipulation(manipulation_clas, percent, i)
+            percent = percent + 0.1
+
+    def evaluate_lbp_change_all(self, manipulation_clas):
+        percent = 0.1
+        for i in range(10):
+            print('percent ', percent)
+            self.evaluate_lbp_with_change_class_manipulation(manipulation_clas, percent, i)
+            percent = percent + 0.1
+
+    def evaluate_lbp_add_all(self, manipulation_clas):
+        percent = 0.1
+        for i in range(10):
+            print('percent ', percent)
+            self.evaluate_lbp_with_add_manipulation(manipulation_clas, percent, i)
+            percent = percent + 0.1
+
     def evaluate_lbp(self):
         clas_matrix = self.create_clas_matrix() # (319, 16)
         nodes_per_class_vector = clas_matrix.sum(axis=0) # wektor - ile węzłów w danej klasie
@@ -340,64 +373,75 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
+        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
+        # lbp = np.subtract(clas_matrix, result_matrix)
+        # lbp = np.absolute(lbp)
+        # lbp_sum = lbp.sum(axis=0)
+
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        lbp = np.subtract(clas_matrix, result_matrix)
+        lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
         lbp_sum = lbp.sum(axis=0)
 
-        utils.save_to_file_lbp('evaluate_lbp', 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp_sum', lbp_sum)
+        utils.save_to_file_lbp('evaluate_lbp', 0, 0, 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp', lbp, 'lbp_sum', lbp_sum)
         print('nodes_per_class_vector\n', nodes_per_class_vector)
         print('nodes_per_class_vector_after_lbp\n', nodes_per_class_vector_after_lbp)
         print('lbp_sum\n', lbp_sum)
+        return lbp_sum
 
-    def evaluate_lbp_with_remove_manipulation(self, manipulation_clas):
+
+    def evaluate_lbp_with_remove_manipulation(self, manipulation_clas, percent, index):
         clas_matrix = self.create_clas_matrix() # (319, 16)
         nodes_per_class_vector = clas_matrix.sum(axis=0) # wektor - ile węzłów w danej klasie
 
-        adjacency_matrix = self.get_adjacency_matrix() # macierz sąsiedztwa
         result_matrix = np.copy(clas_matrix)
 
         nodes_to_remove = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
-        batch_size = int(0.1*len(nodes_to_remove))
+        batch_size = int(percent*len(nodes_to_remove))
         removed_nodes_indices = []
 
+        removed_nodes_indices = self.remove_node_for_lbp(manipulation_clas, nodes_to_remove, batch_size, result_matrix)
+
+        adjacency_matrix = self.get_adjacency_matrix() # macierz sąsiedztwa
+        self.reset_adjacency_matrix_for_removed_nodes(adjacency_matrix, removed_nodes_indices) # wyzerowanie wierszy w macierzy sąsiedztwa dla usunietych wierzcholkow
+
         for i in range(50): 
-            removed_nodes_indices_partial = self.remove_node_for_lbp(manipulation_clas, nodes_to_remove, batch_size, result_matrix, i)
-            removed_nodes_indices += removed_nodes_indices_partial
             self.reset_result_matrix_for_removed_nodes(result_matrix, removed_nodes_indices) # wyzerowanie wierszy dla usunietych wierzcholkow
             for j in range(result_matrix.shape[1]): # 16 kolumn
                 result = adjacency_matrix.dot(result_matrix[:, j]) # mnozenie macierzy sąsiedztwa przez kolejne kolumny
                 result_matrix[:, j] = result
-
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        lbp = np.subtract(clas_matrix, result_matrix)
+        lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
         lbp_sum = lbp.sum(axis=0)
 
-        utils.save_to_file_lbp('evaluate_lbp_with_remove_manipulation', 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp_sum', lbp_sum)
+        utils.save_to_file_lbp('evaluate_lbp_with_remove_manipulation', percent, index, 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp', lbp, 'lbp_sum', lbp_sum)
         print('nodes_per_class_vector\n', nodes_per_class_vector)
         print('nodes_per_class_vector_after_lbp\n', nodes_per_class_vector_after_lbp)
         print('lbp_sum\n', lbp_sum)
         # print('removed_nodes_indices: ', removed_nodes_indices)
 
-    def evaluate_lbp_with_add_manipulation(self, manipulation_clas):
+    def evaluate_lbp_with_add_manipulation(self, manipulation_clas, percent, index):
         clas_matrix = self.create_clas_matrix() # (319, 16)
         nodes_per_class_vector = clas_matrix.sum(axis=0) # wektor - ile węzłów w danej klasie
 
         result_matrix = np.copy(clas_matrix)
 
-        nodes_to_add = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
+        # nodes_to_add = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
         number_of_edges = int(np.ceil(0.2 * self.average_degree))
-        batch_size = int(0.1*len(nodes_to_add))
+        batch_size = int(percent*self.size)
         added_nodes_indices = []
+        last_added_index = 0
 
+        added_nodes_indices, result_matrix, last_added_index = self.add_node_for_lbp(manipulation_clas, batch_size, result_matrix, number_of_edges, last_added_index)
+        new_adjacency_matrix = self.get_adjacency_matrix() # pobieranie nowej macierzy sąsiedztwa po dodaniu nowego wierzchołka
+        print('size ', len(list(self.G.nodes())))
         for i in range(50): 
-            added_nodes_indices_partial, result_matrix = self.add_node_for_lbp(manipulation_clas, batch_size, result_matrix, number_of_edges, i)
-            added_nodes_indices += added_nodes_indices_partial
-            new_adjacency_matrix = self.get_adjacency_matrix() # pobieranie nowej macierzy sąsiedztwa po dodaniu nowego wierzchołka
+            
+            
             self.reset_result_matrix_for_added_nodes(result_matrix, added_nodes_indices, manipulation_clas) # wyzerowanie wierszy dla usunietych wierzcholkow
             for j in range(result_matrix.shape[1]): # 16 kolumn
                 result = new_adjacency_matrix.dot(result_matrix[:, j]) # mnozenie macierzy sąsiedztwa przez kolejne kolumny
@@ -406,17 +450,22 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
+        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
+        # lbp = np.subtract(clas_matrix, result_matrix)
+        # lbp = np.absolute(lbp)
+        # lbp_sum = lbp.sum(axis=0)
+
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        lbp = np.subtract(clas_matrix, result_matrix)
+        lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
         lbp_sum = lbp.sum(axis=0)
 
-        utils.save_to_file_lbp('evaluate_lbp_with_add_manipulation', 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp_sum', lbp_sum)
+        utils.save_to_file_lbp('evaluate_lbp_with_add_manipulation', percent, index, 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp', lbp, 'lbp_sum', lbp_sum)
         print('nodes_per_class_vector\n', nodes_per_class_vector)
         print('nodes_per_class_vector_after_lbp\n', nodes_per_class_vector_after_lbp)
         print('lbp_sum\n', lbp_sum)
 
-    def evaluate_lbp_with_change_class_manipulation(self, manipulation_clas):
+    def evaluate_lbp_with_change_class_manipulation(self, manipulation_clas, percent, index):
         clas_matrix = self.create_clas_matrix() # (319, 16)
         nodes_per_class_vector = clas_matrix.sum(axis=0) # wektor - ile węzłów w danej klasie
 
@@ -424,12 +473,12 @@ class Homophily:
         result_matrix = np.copy(clas_matrix)
 
         nodes_to_change = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
-        batch_size = int(0.1*len(nodes_to_change))
+        batch_size = int(percent*len(nodes_to_change))
         changed_nodes_indices = []
 
-        for i in range(50): 
-            changed_nodes_indices_partial = self.remove_node_for_lbp(manipulation_clas, nodes_to_change, batch_size, result_matrix, i)
-            changed_nodes_indices += changed_nodes_indices_partial
+        changed_nodes_indices = self.change_node_for_lbp(manipulation_clas, nodes_to_change, batch_size, result_matrix)
+
+        for i in range(50):
             self.reset_result_matrix_for_changed_nodes(result_matrix, changed_nodes_indices, manipulation_clas)
             for j in range(result_matrix.shape[1]): # 16 kolumn
                 result = adjacency_matrix.dot(result_matrix[:, j]) # mnozenie macierzy sąsiedztwa przez kolejne kolumny
@@ -437,12 +486,17 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
+        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
+        # lbp = np.subtract(clas_matrix, result_matrix)
+        # lbp = np.absolute(lbp)
+        # lbp_sum = lbp.sum(axis=0)
+
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        lbp = np.subtract(clas_matrix, result_matrix)
+        lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
         lbp_sum = lbp.sum(axis=0)
 
-        utils.save_to_file_lbp('evaluate_lbp_with_change_class_manipulation', 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp_sum', lbp_sum)
+        utils.save_to_file_lbp('evaluate_lbp_with_change_class_manipulation', percent, index, 'nodes_per_class_vector', nodes_per_class_vector, 'nodes_per_class_vector_after_lbp', nodes_per_class_vector_after_lbp, 'lbp', lbp, 'lbp_sum', lbp_sum)
         print('nodes_per_class_vector\n', nodes_per_class_vector)
         print('nodes_per_class_vector_after_lbp\n', nodes_per_class_vector_after_lbp)
         print('lbp_sum\n', lbp_sum)
@@ -534,6 +588,7 @@ class Homophily:
             #zdarza sie ze juz w result_matrix ma wiecej niz jedną jedynkę, dlatego trzeba losować z nich do której klasy nalezy
             max_val_indeces = np.argwhere(matrix[row] == np.amax(matrix[row])).flatten().tolist() # lista indeksów z max wartościami
             random_chosen_index = random.choice(max_val_indeces) # losowo wybrany 
+            # random_chosen_index = max_val_indeces[0]
             
             matrix[row] = [0 for el in matrix[row]] # wstaw same 0
             matrix[row][random_chosen_index] = 1 # wstaw 1 pod zadanym indeksem  
@@ -541,12 +596,15 @@ class Homophily:
 
 
  
-    def remove_node_for_lbp(self, manipulation_clas, nodes_to_remove, batch_size, result_matrix, i):
+    def remove_node_for_lbp(self, manipulation_clas, nodes_to_remove, batch_size, result_matrix):
         removed_nodes_indices = []
         if (nodes_to_remove):
             for i in range(batch_size):
                 try:
-                    node = self.pick_by_ranking(manipulation_clas, nodes_to_remove, 0)
+                    # node = self.pick_by_ranking(manipulation_clas, nodes_to_remove, 0)
+                    # node = self.pick_by_pagerank(manipulation_clas, nodes_to_remove, 0)                    
+                    # node = self.pick_random(manipulation_clas, nodes_to_remove, 0)                    
+                    node = self.pick_with_probability(manipulation_clas, nodes_to_remove, 0)                    
                     nodes_to_remove.remove(node)
                     node_index = self.get_index(node)
                     removed_nodes_indices.append(node_index)
@@ -560,24 +618,21 @@ class Homophily:
     def add_node_for_lbp(self, manipulation_clas, batch_size, result_matrix, number_of_edges, i):
         added_nodes_indices = []
         manipulate_clas_index = self.get_manipulate_clas_index(manipulation_clas)
+        last_added_index = i
         for b in range(batch_size):
-            new_node = (i+10000)
+            new_node = (last_added_index+10000)
             for n in range(number_of_edges):
-                node = self.pick_by_ranking_for_add(manipulation_clas, list(self.G.nodes()), i)                         
+                node = self.pick_random(manipulation_clas, list(self.G.nodes()), last_added_index)                         
                 self.add_node(node, new_node, manipulation_clas)           
             new_node_index = self.get_index(new_node)
             added_nodes_indices.append(new_node_index)  
             new_result_matrix_row = np.zeros((1, result_matrix.shape[1])) # stworzenie nowego wiersza dla result_matrix
             new_result_matrix_row[0, manipulate_clas_index] = 1 # ustalamy klasę manipulującą dla nowego wiersza
-            result_matrix = np.append(result_matrix,new_result_matrix_row, axis=0) # dodanie wiersza do result_matrix
-
+            result_matrix = np.vstack((result_matrix, new_result_matrix_row)) # dodanie wiersza do result_matrix
+            last_added_index += 1
             # print('shape ', result_matrix.shape)
-        return added_nodes_indices, result_matrix
 
-    def print_matrix(self, matrix):
-        rows,cols = matrix.shape
-        for row in range(rows):
-            print(matrix[row])
+        return added_nodes_indices, result_matrix, last_added_index
 
     def change_node_for_lbp(self, manipulation_clas, nodes_to_change, batch_size, result_matrix):
         changed_nodes_indices = []
@@ -585,7 +640,10 @@ class Homophily:
         if (nodes_to_change):
             for i in range(batch_size):
                 try:
-                    node = self.pick_by_ranking(manipulation_clas, nodes_to_change, 0)
+                    # node = self.pick_by_ranking(manipulation_clas, nodes_to_change, 0)
+                    # node = self.pick_by_pagerank(manipulation_clas, nodes_to_change, 0)
+                    # node = self.pick_random(manipulation_clas, nodes_to_change, 0)
+                    node = self.pick_with_probability(manipulation_clas, nodes_to_change, 0)
                     nodes_to_change.remove(node)
                     node_index = self.get_index(node)
                     changed_nodes_indices.append(node_index)
@@ -594,6 +652,15 @@ class Homophily:
                 except Exception:
                     print('cannot remove, probably empty array')
         return changed_nodes_indices
+
+    def print_matrix(self, matrix):
+        rows,cols = matrix.shape
+        for row in range(rows):
+            print(matrix[row])
+
+    def reset_adjacency_matrix_for_removed_nodes(self, adjacency_matrix, removed_nodes_indices):
+        for index in removed_nodes_indices:
+            adjacency_matrix[index] = 0
 
     def reset_result_matrix_for_removed_nodes(self, result_matrix, removed_nodes_indices):
         for index in removed_nodes_indices:
@@ -620,9 +687,3 @@ class Homophily:
                 return i
             i +=1
         return 0
-
-
-# homophily = Homophily('datasets/amd_network_class.gml')
-# print('start')
-# homophily.evaluate_lbp_with_add_manipulation('E')
-# print('end')
