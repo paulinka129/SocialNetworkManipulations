@@ -5,6 +5,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import itertools
 from random import choices
+import json
+from collections import defaultdict
 
 # mpl.rcParams['savefig.dpi'] = 120
 # mpl.rcParams['figure.dpi'] = 120
@@ -66,39 +68,46 @@ def plot_local_homophily(homo_list_before, homo_list_after, network_name, filena
     plt.savefig('figures/local/{0}/{1}'.format(network_name, filename))
 
 def plot_all(class_partition, global_homophilies, homophily_per_clas, manipulation_clas, network_name, strategy_name):
-    x_max = len(class_partition)+1
+    x_max = len(class_partition)
     # manipulation_clas = 'E'
     title = ''
     if (strategy_name.startswith('remove')):
-        title = 'liczba usunietych wierzcholkow'
+        title = 'liczba usuniętych wierzchołków'
     elif (strategy_name.startswith('add')):
-        title = 'liczba dodanych wierzcholkow'
+        title = 'liczba dodanych wierzchołków'
     else:
-        title = 'liczba zmienionych wierzcholkow'        
+        title = 'liczba zmienionych wierzchołków'        
         
 
     plt.style.use('seaborn-deep')
     fig, ax = plt.subplots()
     
     ### - globalna homofilia
-    ax.plot(range(1,len(global_homophilies)+1), global_homophilies, 'r', linewidth=2, label='homofilia globalna')
+    ax.plot(range(1,len(global_homophilies)+1), global_homophilies, 'r', linewidth=2, label='homogeniczność globalna')
 
     ### - globalna dla klas
     for homo_list in homophily_per_clas:
         val = homophily_per_clas[homo_list]
         if (homo_list == manipulation_clas):
-            ax.plot(range(1,len(val)+1), val, color='green', label='homofilia klasy {0}'.format(homo_list))
+            ax.plot(range(0,len(val)), val, color='green', label='homogeniczność klasy {0}'.format(homo_list))
         else:
-            ax.plot(range(1,len(val)+1), val, label='homofilia klasy {0}'.format(homo_list))
+            ax.plot(range(0,len(val)), val, label='homogeniczność klasy {0}'.format(homo_list))
 
     ### - udzial klasy  
-    ax.plot(range(1, x_max), class_partition, color='green', ls='--', label='udzial klasy {0}'.format(manipulation_clas))
+    ax.plot(range(0, x_max), class_partition, color='green', ls='--', label='udział klasy {0}'.format(manipulation_clas))
 
     ### - udzial klasy (poczatek, koniec)
     ax.scatter([0, (x_max)], [class_partition[0], class_partition[len(class_partition)-1]], color='green', marker='o', s=50)
 
     ax.set_xlim(0, x_max)
     ax.set_ylim(0, 1)
+    
+    extraticks = [x_max-1]
+
+    ticks = list(plt.xticks()[0])
+    ticks.pop()
+
+    plt.xticks(ticks + extraticks)
 
     handles, labels = ax.get_legend_handles_labels()
 
@@ -152,6 +161,16 @@ def save_to_file(results, network_name, filename):
     with open('results/{0}/{1}'.format(network_name, filename), "w") as f:
         for s in results:
             f.write(str(s) +"\n")
+
+def save_to_json(results, network_name, filename):
+    with open('results/{0}/{1}.json'.format(network_name, filename), "w") as f:
+        json.dump(results, f)
+
+def read_json(network_name, filename):
+    result = defaultdict(list)
+    with open('results/{0}/{1}'.format(network_name, filename), "r") as f:
+        result = json.loads(f.read())
+    return result
 
 def save_to_file_lbp(filename, percent, index, *args):
     with open('lbp/{0}_{1}_{2}'.format(filename, percent, index), "w") as f:

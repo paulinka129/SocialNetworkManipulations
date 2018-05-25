@@ -10,9 +10,6 @@ from scipy import sparse
 
 class Homophily:
 
-    class0 = '0'
-    class1 = '1'
-
     def __init__(self, filename):
         self.G = self.load_graph(filename)
         self.remove_nodes_without_edges()
@@ -22,6 +19,26 @@ class Homophily:
         self.homophily_per_clas = defaultdict(list)
         self.average_degree = self.get_average_degree(self.G)
         # self.pagerank = self.evaluate_pagerank()
+
+    def manipulate_homophily(self, strategy_func, strategy_name, pick_strategy, manipulation_clas, network_name):
+        self.global_homophilies  = []
+        class_partitions = []
+        nodes_with_manipulation_clas = [node for node in self.G.nodes() if self.get_node_class(node) == manipulation_clas] 
+        class_partitions.append(len(nodes_with_manipulation_clas)/self.size)
+        homo_list_before = self.local_homophily()
+        nodes_to_remove = [node for node in self.G.nodes() if self.get_node_class(node) != manipulation_clas]
+        utils.save_to_file(homo_list_before, network_name, '{0}_homo_list_before'.format(strategy_name))
+
+        ''' add, remove or change node ''' 
+        strategy_func(nodes_to_remove, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas)
+
+
+        homo_list_after = self.local_homophily()
+        utils.save_to_file(homo_list_after, network_name, '{0}_homo_list_after'.format(strategy_name))
+        utils.save_to_file(self.global_homophilies, network_name, '{0}_global_homophilies'.format(strategy_name))
+        utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, strategy_name)
+        utils.plot_global_homophily(self.global_homophilies, network_name, strategy_name)
+        utils.plot_all(class_partitions, self.global_homophilies, self.homophily_per_clas, manipulation_clas, network_name, strategy_name)
 
     def manipulate(self, strategy_func, strategy_name, pick_strategy, manipulation_clas, network_name):
         self.global_homophilies  = []
@@ -41,6 +58,8 @@ class Homophily:
         utils.save_to_file(self.global_homophilies, network_name, '{0}_global_homophilies'.format(strategy_name))
         utils.plot_local_homophily(homo_list_before, homo_list_after, network_name, strategy_name)
         utils.plot_global_homophily(self.global_homophilies, network_name, strategy_name)
+        utils.save_to_file(class_partitions, network_name, '{0}_class_partitions'.format(strategy_name))
+        utils.save_to_json(self.homophily_per_clas, network_name, '{0}_homophily_per_clas'.format(strategy_name))
         utils.plot_all(class_partitions, self.global_homophilies, self.homophily_per_clas, manipulation_clas, network_name, strategy_name)
 
     def remove_strategy(self, nodes_to_remove, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
@@ -89,7 +108,7 @@ class Homophily:
                 class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
                 last_global_homophily = self.global_homophily()
                 self.count_homophily_per_clas()
-                print(str(i) + ': ' + str(last_global_homophily))
+                print(i)
             except Exception as ex:
                 print(ex)
             i += 1
@@ -112,15 +131,7 @@ class Homophily:
             class_partitions.append(len(nodes_with_manipulation_clas)/len(list(self.G.nodes())))
             last_global_homophily = self.global_homophily()
             self.count_homophily_per_clas()
-            print(str(i) + ': ' + str(last_global_homophily))
             i += 1
-
-
-    def add_medium_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
-        pass
-
-    def add_small_strategy(self, nodes_to_add, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
-        pass
 
     def change_class_strategy(self, nodes_to_change, nodes_with_manipulation_clas, class_partitions, pick_strategy, manipulation_clas):
         count = len(nodes_to_change)
@@ -373,11 +384,6 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
-        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        # lbp = np.subtract(clas_matrix, result_matrix)
-        # lbp = np.absolute(lbp)
-        # lbp_sum = lbp.sum(axis=0)
-
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
         lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
@@ -450,11 +456,6 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
-        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        # lbp = np.subtract(clas_matrix, result_matrix)
-        # lbp = np.absolute(lbp)
-        # lbp_sum = lbp.sum(axis=0)
-
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
         lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
@@ -486,11 +487,6 @@ class Homophily:
             self.normalize_columns(result_matrix) # normalizacja w kolumnach
             self.normalize_rows(result_matrix) # normalizacja w wierszach, suma = 1
         
-        # nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
-        # lbp = np.subtract(clas_matrix, result_matrix)
-        # lbp = np.absolute(lbp)
-        # lbp_sum = lbp.sum(axis=0)
-
         nodes_per_class_vector_after_lbp = result_matrix.sum(axis=0)
         lbp = np.subtract(nodes_per_class_vector, nodes_per_class_vector_after_lbp)
         lbp = np.absolute(lbp)
@@ -501,74 +497,62 @@ class Homophily:
         print('nodes_per_class_vector_after_lbp\n', nodes_per_class_vector_after_lbp)
         print('lbp_sum\n', lbp_sum)
 
+    # def evaluate_lbp_old(self, manipulation_clas):
+    #     clas_matrix = self.create_clas_matrix()
+    #     clas_matrix_before = np.copy(clas_matrix)
+    #     sum_before = clas_matrix_before.sum(axis=0)
 
-    def evaluate_lbp_old(self, manipulation_clas):
-        clas_matrix = self.create_clas_matrix()
-        clas_matrix_before = np.copy(clas_matrix)
-        sum_before = clas_matrix_before.sum(axis=0)
-        print('before manipulation')
-        ### before manipulation
-        adjacency_matrix_before = self.get_adjacency_matrix()
-        result_shape = (clas_matrix.shape)
-        result_matrix_before = np.copy(clas_matrix)
+    #     ### before manipulation
+    #     adjacency_matrix_before = self.get_adjacency_matrix()
+    #     result_shape = (clas_matrix.shape)
+    #     result_matrix_before = np.copy(clas_matrix)
         
 
-        for j in range(result_shape[1]):
-            result = adjacency_matrix_before.dot(result_matrix_before[:, j])
-            result_matrix_before[:, j] = result
-        self.normalize_columns(result_matrix_before)
-        ### end before manipulation
+    #     for j in range(result_shape[1]):
+    #         result = adjacency_matrix_before.dot(result_matrix_before[:, j])
+    #         result_matrix_before[:, j] = result
+    #     self.normalize_columns(result_matrix_before)
+    #     ### end before manipulation
+
+    #     ### manipulation
+
+    #     np.savetxt('lbp-amd/clas_matrix_before', clas_matrix)
+    #     # self.remove_node_for_lbp(manipulation_clas, clas_matrix, 1)
+    #     np.savetxt('lbp-amd/clas_matrix_after', clas_matrix)
+    #     adjacency_matrix_after = self.get_adjacency_matrix()
+    #     result_shape = (clas_matrix.shape)
+    #     result_matrix = np.copy(clas_matrix)
+    #     for i in range (50):
+    #         for j in range(result_shape[1]):
+    #             # np.savetxt('lbp/result_matrix.{0}.{1}'.format(i,j), result_matrix)
+    #             result = adjacency_matrix_after.dot(result_matrix[:, j])
+    #             # np.savetxt('lbp/result.{0}.{1}'.format(i,j), result)
+    #             result_matrix[:, j] = result                
+    #         self.normalize_columns(result_matrix)
+    #         for l in range(result_matrix.shape[0]):
+    #             #normalizacja per wiersz (suma w wierszu =1)
+    #             #zdarza sie ze juz w result_matrix ma wiecej niz jedną jedynkę, dlatego trzeba losować z nich do której klasy nalezy
+
+    #             result_matrix[l,np.argmax(result_matrix[l,:])]=1
+    #             result_matrix[l,:]= [0  if m!=1 else 1 for m in result_matrix[l,:]]
+    #             print(np.argmax(result_matrix[l,:]))
+    #             print(result_matrix[l,:])
         
-        print('end before manipulation')
+    #         # np.savetxt('lbp/result_matrix_trololo.{0}'.format(i), result_matrix)
+    #     ### end manipulation
         
-        print('manipulation')
-        ### manipulation
+    #     lbp = np.subtract(clas_matrix_before, result_matrix)
+    #     lbp = np.absolute(lbp)
+    #     sum_after = lbp.sum(axis=0)
 
-        np.savetxt('lbp-amd/clas_matrix_before', clas_matrix)
-        # self.remove_node_for_lbp(manipulation_clas, clas_matrix, 1)
-        np.savetxt('lbp-amd/clas_matrix_after', clas_matrix)
-        adjacency_matrix_after = self.get_adjacency_matrix()
-        result_shape = (clas_matrix.shape)
-        result_matrix = np.copy(clas_matrix)
-        for i in range (50):
-            for j in range(result_shape[1]):
-                # np.savetxt('lbp/result_matrix.{0}.{1}'.format(i,j), result_matrix)
-                result = adjacency_matrix_after.dot(result_matrix[:, j])
-                # np.savetxt('lbp/result.{0}.{1}'.format(i,j), result)
-                result_matrix[:, j] = result                
-            self.normalize_columns(result_matrix)
-            for l in range(result_matrix.shape[0]):
-                #normalizacja per wiersz (suma w wierszu =1)
-                #zdarza sie ze juz w result_matrix ma wiecej niz jedną jedynkę, dlatego trzeba losować z nich do której klasy nalezy
+    #     np.savetxt('lbp-amd/adjacency_matrix_before', adjacency_matrix_before)
+    #     np.savetxt('lbp-amd/result_matrix_before', result_matrix_before)
+    #     np.savetxt('lbp-amd/adjacency_matrix_after', adjacency_matrix_after)
+    #     np.savetxt('lbp-amd/result_matrix', result_matrix)
+    #     np.savetxt('lbp-amd/lbp', lbp)
 
-                result_matrix[l,np.argmax(result_matrix[l,:])]=1
-                result_matrix[l,:]= [0  if m!=1 else 1 for m in result_matrix[l,:]]
-                print(np.argmax(result_matrix[l,:]))
-                print(result_matrix[l,:])
-        
-            # np.savetxt('lbp/result_matrix_trololo.{0}'.format(i), result_matrix)
-        ### end manipulation
-        
-        
-        print('end manipulation')
-
-        print('after lbp ',result_matrix.sum(axis=0))
-
-        lbp = np.subtract(clas_matrix_before, result_matrix)
-        lbp = np.absolute(lbp)
-        sum_after = lbp.sum(axis=0)
-
-
-
-
-        np.savetxt('lbp-amd/adjacency_matrix_before', adjacency_matrix_before)
-        np.savetxt('lbp-amd/result_matrix_before', result_matrix_before)
-        np.savetxt('lbp-amd/adjacency_matrix_after', adjacency_matrix_after)
-        np.savetxt('lbp-amd/result_matrix', result_matrix)
-        np.savetxt('lbp-amd/lbp', lbp)
-
-        print(sum_before)
-        print(sum_after)
+    #     print(sum_before)
+    #     print(sum_after)
 
     def normalize_columns(self, matrix):
         _, cols = matrix.shape
@@ -584,17 +568,14 @@ class Homophily:
         # print('normalize_rows')
         rows = matrix.shape[0] # liczba wierszy
         for row in range(rows):
-            #normalizacja per wiersz (suma w wierszu =1)
+            #normalizacja per wiersz (suma w wierszu = 1)
             #zdarza sie ze juz w result_matrix ma wiecej niz jedną jedynkę, dlatego trzeba losować z nich do której klasy nalezy
             max_val_indeces = np.argwhere(matrix[row] == np.amax(matrix[row])).flatten().tolist() # lista indeksów z max wartościami
-            random_chosen_index = random.choice(max_val_indeces) # losowo wybrany 
-            # random_chosen_index = max_val_indeces[0]
+            # random_chosen_index = random.choice(max_val_indeces) # losowo wybrany 
+            random_chosen_index = max_val_indeces[0]
             
             matrix[row] = [0 for el in matrix[row]] # wstaw same 0
             matrix[row][random_chosen_index] = 1 # wstaw 1 pod zadanym indeksem  
-            # print('matrix[row]: ', matrix[row])  
-
-
  
     def remove_node_for_lbp(self, manipulation_clas, nodes_to_remove, batch_size, result_matrix):
         removed_nodes_indices = []
